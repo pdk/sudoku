@@ -24,6 +24,7 @@ func findSolutions(b Board, handler SolutionHandler) {
 
 	for i := 0; i < 9; i++ {
 		for j := 0; j < 9; j++ {
+			// looking for a non-blank
 			if b[i][j] != Blank {
 				continue
 			}
@@ -38,6 +39,7 @@ func findSolutions(b Board, handler SolutionHandler) {
 			var wg sync.WaitGroup
 
 			for _, opt := range options {
+				// explore each option in a separate goroutine
 				b[i][j] = opt
 				wg.Add(1)
 				go func(b Board) {
