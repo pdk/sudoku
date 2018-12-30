@@ -30,7 +30,7 @@ func findSolutions(b Board, handler SolutionHandler) {
 
 			options := b.Options(i, j)
 			if len(options) == 0 {
-				// if a any blank on the board has no options, there is no
+				// if any blank on the board has no options, there is no
 				// solution down this path.
 				return
 			}
