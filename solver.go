@@ -22,33 +22,29 @@ func findSolutions(b Board, handler SolutionHandler) {
 		return
 	}
 
-	for i := 0; i < 9; i++ {
-		for j := 0; j < 9; j++ {
-			// looking for a non-blank
-			if b[i][j] != Blank {
-				continue
-			}
-
-			options := b.Options(i, j)
-			if len(options) == 0 {
-				// if any blank on the board has no options, there is no
-				// solution down this path.
-				return
-			}
-
-			var wg sync.WaitGroup
-
-			for _, opt := range options {
-				// explore each option in a separate goroutine
-				b[i][j] = opt
-				wg.Add(1)
-				go func(b Board) {
-					findSolutions(b, handler)
-					wg.Done()
-				}(b)
-			}
-
-			wg.Wait()
-		}
+	i, j, foundBlank := b.FirstBlank()
+	if !foundBlank {
+		return
 	}
+
+	options := b.Options(i, j)
+	if len(options) == 0 {
+		// if any blank on the board has no options, there is no
+		// solution for this board.
+		return
+	}
+
+	// explore each option in a separate goroutine
+
+	var wg sync.WaitGroup
+	for _, opt := range options {
+		b[i][j] = opt
+		wg.Add(1)
+		go func(b Board) {
+			findSolutions(b, handler)
+			wg.Done()
+		}(b)
+	}
+
+	wg.Wait()
 }

@@ -88,15 +88,23 @@ func (s Segment) IsValid() bool {
 
 // IsComplete is true IFF the entire board has non-Blank values.
 func (b Board) IsComplete() bool {
+
+	_, _, gotBlank := b.FirstBlank()
+	return !gotBlank
+}
+
+// FirstBlank returns the row,col position of the first blank on the board.
+func (b Board) FirstBlank() (int, int, bool) {
+
 	for i := 0; i < 9; i++ {
 		for j := 0; j < 9; j++ {
 			if b[i][j] == Blank {
-				return false
+				return i, j, true
 			}
 		}
 	}
 
-	return true
+	return 0, 0, false
 }
 
 // IsValid is true IFF no row, column or block of the board contains duplicate

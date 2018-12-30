@@ -37,7 +37,6 @@ func (v Value) String() string {
 type SolutionHandler struct {
 	solutions chan Board
 	wait      chan struct{}
-	seen      map[Board]bool
 }
 
 // NewSolutionHandler creates and returns a new SolutionHandler
@@ -45,17 +44,11 @@ func NewSolutionHandler() SolutionHandler {
 	h := SolutionHandler{
 		solutions: make(chan Board),
 		wait:      make(chan struct{}),
-		seen:      make(map[Board]bool),
 	}
 
 	go func() {
 		c := 0
 		for solved := range h.solutions {
-
-			if h.seen[solved] {
-				continue
-			}
-			h.seen[solved] = true
 
 			c++
 			fmt.Printf("\nSolution %d:\n\n", c)
