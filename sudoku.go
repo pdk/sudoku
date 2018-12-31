@@ -23,6 +23,12 @@ type Board [9][9]Value
 // Segment is a subgroup. Either row, column or block.
 type Segment [9]Value
 
+// Mark places a value on a row, column location in a Board.
+func Mark(b Board, i, j int, v Value) Board {
+	b[i][j] = v
+	return b
+}
+
 // Row returns the Segment of a particular row.
 func (b Board) Row(row int) Segment {
 	s := Segment{}

@@ -8,7 +8,7 @@ import (
 
 func TestSolver(t *testing.T) {
 
-	// This has 2 solutions:
+	// this has 2 solutions
 	puzzle := sudoku.Board{
 		{9, 2, 6, 5, 7, 1, 4, 8, 3},
 		{3, 5, 1, 4, 8, 6, 2, 7, 9},
@@ -21,5 +21,58 @@ func TestSolver(t *testing.T) {
 		{4, 9, 5, 6, 1, 2, 7, 3, 8},
 	}
 
-	sudoku.Solve(puzzle)
+	failCount := 0
+	failCounter := func(b sudoku.Board) {
+		failCount++
+	}
+
+	solutionCount := 0
+	solutionCounter := func(b sudoku.Board) {
+		solutionCount++
+	}
+
+	sudoku.Solve(puzzle, solutionCounter, failCounter)
+
+	if solutionCount != 2 {
+		t.Errorf("there should be two solutions, got %d", solutionCount)
+	}
+
+	if failCount != 0 {
+		t.Errorf("there should not be failures, got %d", failCount)
+	}
+}
+
+func TestSolver2(t *testing.T) {
+
+	puzzle := sudoku.Board{
+		{0, 2, 0, 0, 0, 5, 0, 0, 0},
+		{0, 1, 5, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 8, 7, 0, 3},
+		{0, 5, 1, 0, 0, 0, 0, 0, 0},
+		{0, 0, 9, 7, 0, 0, 0, 1, 0},
+		{0, 0, 0, 3, 0, 0, 0, 4, 6},
+		{0, 0, 0, 0, 8, 0, 0, 0, 1},
+		{7, 0, 0, 9, 3, 0, 0, 6, 0},
+		{0, 0, 0, 0, 0, 0, 4, 0, 8},
+	}
+
+	failCount := 0
+	failCounter := func(b sudoku.Board) {
+		failCount++
+	}
+
+	solutionCount := 0
+	solutionCounter := func(b sudoku.Board) {
+		solutionCount++
+	}
+
+	sudoku.Solve(puzzle, solutionCounter, failCounter)
+
+	if solutionCount != 1 {
+		t.Errorf("there should be one solution, got %d", solutionCount)
+	}
+
+	if failCount != 201 {
+		t.Errorf("there should be 201 failures, got %d", failCount)
+	}
 }

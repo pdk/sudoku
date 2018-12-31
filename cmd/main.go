@@ -54,6 +54,5 @@ func main() {
 		{0, 9, 0, 0, 0, 0, 4, 0, 0},
 	}
 
-	sudoku.Solve(puzzle)
-
+	sudoku.PrintSolutions(puzzle)
 }
