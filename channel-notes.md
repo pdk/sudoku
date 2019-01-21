@@ -34,13 +34,14 @@ https://play.golang.org/p/TjygTAqy3Z5
 
 1. reading/writing a `nil` channel blocks forever
 2. closing a `nil` or closed channel causes a `panic`
-3. reading/writing a closed channel causes a `panic` (see exception)
+3. reading a closed channel returns the zero value
+4. writing a closed channel causes a `panic`
 
-Exception:
+How to read a potentially closed channel:
 
     myVar, ok := <- myChan
 
-This form of read will block until either a value is available, or the channel is closed. If we receive a value, `ok` will be true. If the channel was closed, `ok` will be false.
+This will block until either a value is available, or the channel is closed. If we receive a value, `ok` will be true. If the channel was closed, `ok` will be false.
 
 ### multiplexing
 
