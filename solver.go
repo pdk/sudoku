@@ -2,7 +2,21 @@ package sudoku
 
 import (
 	"fmt"
+	"log"
+	"runtime"
 )
+
+var (
+	maxGoroutines   int
+	countGoroutines int
+)
+
+func setMaxGoroutines() {
+	i := runtime.NumGoroutine()
+	if i > maxGoroutines {
+		maxGoroutines = i
+	}
+}
 
 // PrintSolutions will run the solver and print the solutions. Also prints a
 // count of search paths that did not produce a solution.
@@ -39,12 +53,17 @@ func Solve(b Board, solutionHandler, failureHandler ResultHandler) {
 			failureHandler(result)
 		}
 	}
+
+	log.Printf("maxGoroutines = %d", maxGoroutines)
+	log.Printf("countGoroutines = %d", countGoroutines)
 }
 
 // SearchSolutions will search options trying to find solutions to the given
 // board. Returns a channel that will produce all the search results. The caller
 // must determine if the results are valid (a solution) or not (a failure).
 func SearchSolutions(b Board) <-chan Board {
+
+	setMaxGoroutines()
 
 	b, _ = b.CompleteSingleOptions()
 
@@ -70,6 +89,7 @@ func SearchSolutions(b Board) <-chan Board {
 
 // SearchOption explores one option in a new goroutine.
 func SearchOption(b Board) <-chan Board {
+	countGoroutines++
 
 	c := make(chan Board)
 	go func() {
@@ -85,6 +105,7 @@ func SearchOption(b Board) <-chan Board {
 
 // OneValue returns a channel that produces a single value.
 func OneValue(b Board) <-chan Board {
+	countGoroutines++
 
 	c := make(chan Board)
 	go func() {
@@ -98,6 +119,7 @@ func OneValue(b Board) <-chan Board {
 
 // MergeValues coalesces values from two channels into a single channel.
 func MergeValues(a <-chan Board, b <-chan Board) <-chan Board {
+	countGoroutines++
 
 	c := make(chan Board)
 	go func() {
